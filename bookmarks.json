@@ -1,16 +1,37 @@
 [
   {
-    "category": "Social",
+    "category": "Reddit",
     "links": [
-      { "name": "GitHub", "url": "https://github.com" },
-      { "name": "Reddit", "url": "https://reddit.com" }
+      { "name": "Unixporn", "url": "https://reddit.com/r/unixporn" },
+      {
+        "name": "Battle Stations",
+        "url": "https://reddit.com/r/battlestations"
+      },
+      {
+        "name": "Kasane Teto",
+        "url": "https://reddit.com/r/KasaneTeto"
+      },
+      {
+        "name": "Kaguya",
+        "url": "https://reddit.com/r/CosmicPrincessKaguya"
+      }
     ]
   },
   {
     "category": "Dev",
     "links": [
-      { "name": "Tailwind", "url": "https://tailwindcss.com" },
+      { "name": "GitHub", "url": "https://github.com" },
+      { "name": "Tailwind", "url": "https://tailwindcss.com/docs" },
+      { "name": "Electron", "url": "https://www.electronjs.org/docs/latest" },
       { "name": "MDN", "url": "https://developer.mozilla.org" }
+    ]
+  },
+  {
+    "category": "Rest",
+    "links": [
+      { "name": "MonkeyType", "url": "https://monkeytype.com" },
+      { "name": "YouTube", "url": "https://youtube.com" },
+      { "name": "Roblox", "url": "https://roblox.com" }
     ]
   }
 ]
