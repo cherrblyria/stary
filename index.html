@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link href="./css/app.css" rel="stylesheet" />
+    <link href="./css/tailwind.css" rel="stylesheet" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -19,7 +19,16 @@
   >
     <div class="flex justify-center">
       <div class="pr-20">
-        <img src="./assets/mizuena.gif" class="rounded-3xl shadow-2xl" />
+        <picture>
+          <source
+            srcset="./assets/dark.jpg"
+            media="(prefers-color-scheme: dark)"
+          />
+          <img
+            src="./assets/light.jpg"
+            class="rounded-3xl shadow-2xl w-96 h-auto"
+          />
+        </picture>
       </div>
 
       <div class="grid grid-rows-2">
