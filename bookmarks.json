@@ -1,0 +1,16 @@
+[
+  {
+    "category": "Social",
+    "links": [
+      { "name": "GitHub", "url": "https://github.com" },
+      { "name": "Reddit", "url": "https://reddit.com" }
+    ]
+  },
+  {
+    "category": "Dev",
+    "links": [
+      { "name": "Tailwind", "url": "https://tailwindcss.com" },
+      { "name": "MDN", "url": "https://developer.mozilla.org" }
+    ]
+  }
+]
