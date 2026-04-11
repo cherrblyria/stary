@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Cascadia+Code:ital,wght@0,200..700;1,200..700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Quicksand:wght@300..700&display=swap"
       rel="stylesheet"
     />
 
@@ -15,10 +15,10 @@
   </head>
 
   <body
-    class="bg-mauve-300 dark:bg-mauve-900 text-mauve-700 dark:text-mauve-300 font-mono text-shadow-lg h-screen content-center text-center"
+    class="font-sans bg-mauve-300 dark:bg-mauve-900 text-mauve-700 dark:text-mauve-300 text-shadow-lg h-screen content-center text-center"
   >
     <div class="flex justify-center">
-      <div class="pr-20">
+      <div class="md:p-10 md:pl-15 lg:p-15">
         <picture>
           <source
             srcset="./assets/dark.jpg"
@@ -26,79 +26,25 @@
           />
           <img
             src="./assets/light.jpg"
-            class="rounded-3xl shadow-2xl w-96 h-auto"
+            class="rounded-3xl shadow-2xl size-0 md:w-96 h-auto"
+            alt=":3"
           />
         </picture>
       </div>
 
-      <div class="grid grid-rows-2">
-        <div class="text-5xl w-lg pb-15 flex h-fit justify-center self-end">
-          <div>$ cd ~/</div>
-          <div class="animate-pulse">_</div>
-        </div>
+      <div class="md:pl-10 md:pr-15 flex-row content-center">
+        <div class="font-serif text-7xl w-lg pb-15 self-end">Where to go?</div>
 
-        <div class="grid h-fit grid-flow-col">
-          <div class="flex-row">
-            <div class="font-extrabold">Title</div>
+        <nav class="text-xl gap-10 flex justify-center">
+          <div>
+            <div class="font-extrabold">Group</div>
             <div>
-              <a href="https://google.com/">Hello</a>
+              <a href="https://some.site/">Link</a>
             </div>
-            <div>
-              <a href="https://google.com/">Hello</a>
-            </div>
-            <div>
-              <a href="https://google.com/">Hello</a>
-            </div>
-            <div>
-              <a href="https://google.com/">Hello</a>
-            </div>
+            <!-- ... -->
           </div>
-          <div class="flex-row">
-            <div class="font-extrabold">Title</div>
-            <div>
-              <a href="https://google.com/">Hello</a>
-            </div>
-            <div>
-              <a href="https://google.com/">Hello</a>
-            </div>
-            <div>
-              <a href="https://google.com/">Hello</a>
-            </div>
-            <div>
-              <a href="https://google.com/">Hello</a>
-            </div>
-          </div>
-          <div class="flex-row">
-            <div class="font-extrabold">Title</div>
-            <div>
-              <a href="https://google.com/">Hello</a>
-            </div>
-            <div>
-              <a href="https://google.com/">Hello</a>
-            </div>
-            <div>
-              <a href="https://google.com/">Hello</a>
-            </div>
-            <div>
-              <a href="https://google.com/">Hello</a>
-            </div>
-          </div>
-          <div class="flex-row">
-            <div class="font-extrabold">Title</div>
-            <div>
-              <a href="https://google.com/">Hello</a>
-            </div>
-            <div>
-              <a href="https://google.com/">Hello</a>
-            </div>
-            <div>
-              <a href="https://google.com/">Hello</a>
-            </div>
-            <div>
-              <a href="https://google.com/">Hello</a>
-            </div>
-          </div>
-        </div>
+          <!-- ... -->
+        </nav>
       </div>
     </div>
   </body>
