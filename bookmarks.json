@@ -7,14 +7,8 @@
         "name": "Battle Stations",
         "url": "https://reddit.com/r/battlestations"
       },
-      {
-        "name": "Kasane Teto",
-        "url": "https://reddit.com/r/KasaneTeto"
-      },
-      {
-        "name": "Kaguya",
-        "url": "https://reddit.com/r/CosmicPrincessKaguya"
-      }
+      { "name": "Kasane Teto", "url": "https://reddit.com/r/KasaneTeto" },
+      { "name": "Kaguya", "url": "https://reddit.com/r/CosmicPrincessKaguya" }
     ]
   },
   {
@@ -22,8 +16,16 @@
     "links": [
       { "name": "GitHub", "url": "https://github.com" },
       { "name": "Tailwind", "url": "https://tailwindcss.com/docs" },
-      { "name": "Electron", "url": "https://www.electronjs.org/docs/latest" },
+      { "name": "Electron", "url": "https://electronjs.org/docs/latest" },
       { "name": "MDN", "url": "https://developer.mozilla.org" }
+    ]
+  },
+  {
+    "category": "Tools",
+    "links": [
+      { "name": "Gemini", "url": "https://google.gemini.com/app" },
+      { "name": "Duck.ai", "url": "https://duck.ai" },
+      { "name": "Translate", "url": "https://translate.google.com" }
     ]
   },
   {
