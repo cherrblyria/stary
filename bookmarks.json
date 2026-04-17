@@ -32,6 +32,7 @@
     "category": "Rest",
     "links": [
       { "name": "MonkeyType", "url": "https://monkeytype.com" },
+      { "name": "Pinterest", "url": "https://pinterest.com" },
       { "name": "YouTube", "url": "https://youtube.com" },
       { "name": "Roblox", "url": "https://roblox.com" }
     ]
