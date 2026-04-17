@@ -23,7 +23,7 @@
   {
     "category": "Tools",
     "links": [
-      { "name": "Gemini", "url": "https://google.gemini.com/app" },
+      { "name": "Gemini", "url": "https://gemini.google.com/app" },
       { "name": "Duck.ai", "url": "https://duck.ai" },
       { "name": "Translate", "url": "https://translate.google.com" }
     ]
