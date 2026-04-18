@@ -23,7 +23,7 @@
   {
     "category": "Tools",
     "links": [
-      { "name": "Gemini", "url": "https://google.gemini.com/app" },
+      { "name": "Gemini", "url": "https://gemini.google.com/app" },
       { "name": "Duck.ai", "url": "https://duck.ai" },
       { "name": "Translate", "url": "https://translate.google.com" }
     ]
@@ -32,6 +32,7 @@
     "category": "Rest",
     "links": [
       { "name": "MonkeyType", "url": "https://monkeytype.com" },
+      { "name": "Pinterest", "url": "https://pinterest.com" },
       { "name": "YouTube", "url": "https://youtube.com" },
       { "name": "Roblox", "url": "https://roblox.com" }
     ]
