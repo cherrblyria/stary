@@ -16,8 +16,81 @@
   </head>
 
   <body
-    class="font-sans bg-mauve-300 dark:bg-mauve-900 text-mauve-700 dark:text-mauve-300 text-shadow-lg h-screen content-center text-center"
+    class="font-sans bg-mauve-300 dark:bg-mauve-900 text-mauve-700 dark:text-mauve-300 text-shadow-lg h-screen content-center text-center relative"
   >
+    <!-- Settings Menu Button -->
+    <button
+      onclick="toggleSettingsMenu()"
+      class="fixed bottom-4 right-4 text-xl hover:opacity-80 cursor-pointer"
+      title="Settings"
+    >
+      ⚙️
+    </button>
+
+    <!-- Settings Menu Panel -->
+    <div
+      id="settings-menu"
+      class="hidden fixed bottom-16 right-4 bg-white dark:bg-mauve-800 border border-mauve-400 dark:border-mauve-600 rounded-lg shadow-lg p-4 z-50 w-72 max-h-96 overflow-y-auto"
+    >
+      <h3 class="font-extrabold mb-4 text-mauve-700 dark:text-mauve-300">Settings</h3>
+      <div class="space-y-3">
+        <label class="flex items-center gap-2 cursor-pointer text-mauve-700 dark:text-mauve-300">
+          <input
+            type="checkbox"
+            id="auto-save-toggle"
+            onchange="toggleAutoSave()"
+            class="w-4 h-4"
+          />
+          <span class="text-sm">Auto-save enabled</span>
+        </label>
+
+        <hr class="my-3 border-mauve-300 dark:border-mauve-600" />
+
+        <h4 class="font-semibold text-sm text-mauve-700 dark:text-mauve-300">Bookmarks</h4>
+
+        <button
+          id="edit-btn"
+          onclick="toggleEditMode()"
+          class="w-full px-3 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 font-semibold text-sm"
+        >
+          Edit Bookmarks
+        </button>
+
+        <button
+          onclick="addCategory()"
+          id="add-category-btn"
+          class="w-full px-3 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 font-semibold text-sm"
+        >
+          + Add Category
+        </button>
+
+        <hr class="my-3 border-mauve-300 dark:border-mauve-600" />
+
+        <h4 class="font-semibold text-sm text-mauve-700 dark:text-mauve-300">Data</h4>
+
+        <button
+          onclick="exportBookmarks()"
+          class="w-full px-3 py-2 bg-green-500 text-white rounded hover:bg-green-600 font-semibold text-sm"
+        >
+          Export
+        </button>
+
+        <button
+          onclick="importBookmarks()"
+          class="w-full px-3 py-2 bg-purple-500 text-white rounded hover:bg-purple-600 font-semibold text-sm"
+        >
+          Import
+        </button>
+
+        <button
+          onclick="resetBookmarks()"
+          class="w-full px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600 font-semibold text-sm"
+        >
+          Reset to Default
+        </button>
+      </div>
+    </div>
+
     <div class="flex justify-center">
       <div class="md:p-10 md:pl-15 lg:p-15">
         <picture>
