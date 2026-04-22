@@ -1,79 +1,72 @@
 # Agent Instructions for Stary
 
 ## Project Overview
-**Stary** is a simple, customizable static start page (bookmark home). It's a vanilla HTML/CSS/JS project with Tailwind CSS styling and no build step for production.
+**Stary** is a customizable static start page with editable bookmarks. Vanilla HTML/CSS/JS with Tailwind CSS, no production build step. Bookmarks and settings persist to browser localStorage; changes sync with JSON export/import.
 
 ## Architecture & Layout
 ```
 stary/
-├── index.html          # Single page entry point
-├── js/script.js        # Loads bookmarks from JSON, renders nav
+├── index.html          # Single page; settings menu button + bookmark render target
+├── js/script.js        # Bookmark management (CRUD), localStorage, settings menu, edit mode UI
 ├── css/
-│   ├── style.css       # Tailwind @import + custom theme variables
-│   └── tailwind.css    # Pre-built Tailwind CSS (v4.2.2, generated)
-├── bookmarks.json      # Data: categories/links structure
-├── assets/             # Images: dark.jpg (dark mode), light.jpg (light mode), favicon.ico
-└── package.json        # Prettier + Tailwind tooling (no runtime deps)
+│   ├── style.css       # Tailwind @import + custom fonts (source for Tailwind build)
+│   └── tailwind.css    # Compiled CSS (generated—do not edit)
+├── bookmarks.json      # Default bookmarks data (fallback if localStorage empty)
+├── assets/             # light.jpg, dark.jpg, favicon.ico
+└── package.json        # Dev deps: Prettier, Tailwind CLI, @tailwindcss/cli
 ```
 
 ## Key Developer Commands
 | Command | Purpose |
 |---------|---------|
-| `npm install` | Install dev dependencies (Prettier, Tailwind CLI) |
-| `npm run format` | NOT PRESENT—use `npx prettier --write` manually |
-| `npx prettier --write .` | Format HTML, JSON, CSS with Tailwind plugin |
-| `npx tailwindcss -i ./css/style.css -o ./css/tailwind.css --watch` | Rebuild Tailwind CSS on style.css changes |
+| `npm install` | Install dev dependencies |
+| `cmd /c npx @tailwindcss/cli -i ./css/style.css -o ./css/tailwind.css` | Rebuild compiled CSS after style.css changes |
+| Prettier | Not in npm scripts; use manually if needed (has `prettier-plugin-tailwindcss` configured) |
 
-## Important Details for Agents
+**Critical:** Always rebuild Tailwind after HTML changes introduce new utility classes (blue, green, red, purple, yellow, etc.).
 
-### Tailwind CSS Build
-- `css/style.css` is the **source** (has `@import "tailwindcss"` and custom `@theme`)
-- `css/tailwind.css` is the **compiled output**—do not edit directly
-- Run Tailwind CLI whenever `style.css` changes, or after adding new Tailwind classes in HTML
-- The generated `tailwind.css` is committed to git (no build step needed for users)
+## Bookmark Features (as of v1.1)
+- **Storage:** Default bookmarks from `bookmarks.json`; first load saves to localStorage
+- **Edit mode:** Toggle via settings menu → "Edit Bookmarks" button shows add/delete/edit controls inline
+- **Data persistence:** Auto-save to localStorage (controlled by "Auto-save enabled" toggle in settings)
+- **Export/Import:** Download bookmarks as JSON or import previously exported file
+- **Reset:** Clear localStorage and reload default `bookmarks.json`
 
-### Code Generation & Formatting
-- Prettier is configured with `prettier-plugin-tailwindcss` (sorts Tailwind classes in HTML)
-- `.prettierrc` specifies `tailwindStylesheet: ./css/tailwind.css` for plugin configuration
-- Always run Prettier after editing HTML to keep class order consistent
+### Bookmarks Data Flow
+1. **Load:** localStorage.getItem("bookmarks") → fallback to fetch("./bookmarks.json")
+2. **Save:** saveToLocalStorage() checks `autoSaveEnabled` before writing (silent no-op if false)
+3. **Render:** renderBookmarks() generates HTML with inline edit/delete buttons when `editMode === true`
+4. **Schema:** Array of `{category, links: [{name, url}, ...]}` (no client-side validation; invalid JSON fails silently to console)
 
-### Bookmarks Data Structure
-- `bookmarks.json` is an array of category objects:
-  ```json
-  [{
-    "category": "Group Name",
-    "links": [
-      { "name": "Link Label", "url": "https://..." }
-    ]
-  }, ...]
-  ```
-- `js/script.js` uses `fetch("./bookmarks.json")` → maps to DOM id `#bookmark-list`
-- No client-side validation; invalid JSON will silently fail with console error
+## Settings Menu
+- Button: ⚙️ emoji (fixed bottom-right, no background, `text-xl`)
+- Menu: appears above button (`fixed bottom-16 right-4`), closes on click-outside
+- Sections:
+  - **Settings:** Auto-save toggle (persists as `localStorage.autoSaveEnabled`)
+  - **Bookmarks:** Edit toggle + Add Category
+  - **Data:** Export, Import, Reset to Default
 
-### Dark Mode & Responsive Design
-- Dark mode uses CSS media query: `prefers-color-scheme: dark` (system preference)
-- Responsive breakpoints:
-  - `md:` = 48rem (768px) breakpoints: images, padding, layout
-  - `lg:` = 64rem (1024px) breakpoint: additional padding
-- Custom Tailwind theme in `style.css`: `--font-serif`, `--font-sans`, mauve/red color palette
+Edit mode toggle changes button text ("Edit Bookmarks" ↔ "Done Editing") and must preserve `w-full px-3 py-2 text-sm` to avoid layout shift.
 
-### Assets & Customization
-- Light mode image: `assets/light.jpg` (shown by default)
-- Dark mode image: `assets/dark.jpg` (shown when system prefers dark)
-- Favicon: `assets/favicon.ico`
-- No build step: users only fork repo and modify JSON/images/CSS
+## Tailwind CSS Build
+- **Source:** `css/style.css` (imports tailwindcss, defines `@theme` with custom fonts)
+- **Output:** `css/tailwind.css` (committed to git; compiled by CLI)
+- **Workflow:** Edit `style.css` or HTML → run Tailwind CLI → commit both
+- **Command:** `cmd /c npx @tailwindcss/cli -i ./css/style.css -o ./css/tailwind.css` (use cmd /c on Windows PowerShell due to execution policy)
+- **Do NOT edit `tailwind.css` directly** — changes lost on rebuild
+
+## Dark Mode & Responsive Design
+- Dark mode: CSS media query `prefers-color-scheme: dark` (system preference)
+- Breakpoints: `md:` (768px) and `lg:` (1024px) for images, padding, layout
+- Theme: Mauve (primary) + Red (accent) + standard Tailwind colors (Blue, Green, Yellow, Purple for buttons)
 
 ## Common Pitfalls
-1. **Editing `tailwind.css` directly** → changes will be lost on next build. Edit `style.css` instead.
-2. **Forgetting to rebuild Tailwind** after adding new utility classes in HTML → classes won't have styles.
-3. **Not running Prettier after HTML changes** → Tailwind classes won't be sorted, causing inconsistency.
-4. **Breaking bookmarks.json structure** → `script.js` expects exact schema; missing fields silently fail.
-5. **Committing changes without rebuilding Tailwind** → downstream users get broken styles.
+1. **Edited `tailwind.css` directly** → lost on next CLI run; always edit `style.css`
+2. **Forgot to rebuild Tailwind** after adding utility classes → styles missing
+3. **Edit Bookmarks button changed size on toggle** → must keep `w-full px-3 py-2 text-sm` in both states
+4. **Invalid bookmarks.json** → silently fails; check browser console for parse errors
+5. **Committed without rebuilding Tailwind** → users get unstyled content
 
-## Testing & Verification
-- No automated tests (none configured in package.json)
-- Manual verification:
-  - Open `index.html` in browser (file:// protocol works)
-  - Check light/dark mode switching (system settings)
-  - Verify bookmarks load from JSON (check browser console for errors)
-  - Test responsive layout at md/lg breakpoints
+## Testing
+- No unit/integration tests configured
+- Manual: Open `index.html` in browser, verify bookmarks load from localStorage/JSON, test edit/add/delete/export/import/reset flows, check light/dark modes and responsive breakpoints
