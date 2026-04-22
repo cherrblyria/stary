@@ -70,10 +70,13 @@ function renderBookmarks() {
     .map(
       (group, groupIndex) => `
     <div class="relative group">
-      <div class="font-extrabold flex items-center justify-between gap-2">
-        <span>${group.category}</span>
-        ${editMode ? `<button class="text-xs bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600" onclick="deleteCategory(${groupIndex})">Delete</button>` : ""}
-      </div>
+<div class="font-extrabold flex items-center justify-between gap-2">
+          <span>${group.category}</span>
+          ${editMode ? `<div class="flex gap-2">
+            <button class="text-xs bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600" onclick="renameCategory(${groupIndex})">Rename</button>
+            <button class="text-xs bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600" onclick="deleteCategory(${groupIndex})">Delete</button>
+          </div>` : ""}
+        </div>
       <div class="flex flex-col">
         ${group.links
           .map(
@@ -92,7 +95,11 @@ function renderBookmarks() {
     )
     .join("");
 
+  if (editMode) {
+  container.innerHTML = `<div class=\"flex gap-4\">${html}<div class=\"flex flex-col items-start\"><button onclick=\"addCategory()\" class=\"w-full px-3 py-2 bg-green-500 text-white rounded hover:bg-green-600 font-semibold text-sm mt-2\">+ Add Category</button></div></div>`;
+} else {
   container.innerHTML = html;
+}
 }
 
 // Toggle edit mode
@@ -116,6 +123,15 @@ function addCategory() {
 }
 
 // Delete a category
+function renameCategory(index) {
+  const newName = prompt("Rename category:", bookmarks[index].category);
+  if (newName && newName !== bookmarks[index].category) {
+    bookmarks[index].category = newName;
+    saveToLocalStorage();
+    renderBookmarks();
+  }
+}
+
 function deleteCategory(index) {
   if (confirm(`Delete "${bookmarks[index].category}"?`)) {
     bookmarks.splice(index, 1);
