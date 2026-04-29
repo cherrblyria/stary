@@ -10,13 +10,15 @@ A customizable static start page with editable bookmarks. Lightweight, no build 
 - **Persistent Storage** – Bookmarks saved to browser localStorage with JSON export/import
 - **Dark/Light Mode** – System preference detection with automatic theming
 - **Responsive Design** – Works seamlessly on desktop, tablet, and mobile
-- **No Build Required** – Open `index.html` in your browser and start using immediately
+- **No Build Required** – Just deploy static files, or use the live demo
 
 ### Quick Start
 
-1. **Fork or clone** this repository
-2. **Open** `index.html` in your browser
+1. **Use the live demo** at https://cherrblyria.github.io/stary/
+2. **Or deploy locally** - serve this directory with any static server (e.g., `npx serve` or VS Code Live Server)
 3. **Click the ⚙️ settings button** to customize bookmarks, toggle dark mode, and export/import data
+
+Note: Opening `index.html` directly in the browser won't work—JavaScript is blocked by CORS policies when run from the file system.
 
 ### Customization
 
