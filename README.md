@@ -1,6 +1,6 @@
 ## ✨ Stary
 
-A customizable static start page with editable bookmarks. Lightweight, no build step required—just pure HTML, CSS, and JavaScript with Tailwind styling.
+A customizable static start page with editable bookmarks. Lightweight, no build step required—just pure HTML, CSS, and JavaScript with Tailwind CSS v4.
 
 **👉🏻 [Live Preview](https://cherrblyria.github.io/stary/)**
 
@@ -40,3 +40,5 @@ npx @tailwindcss/cli -i ./css/style.css -o ./css/tailwind.css
 ```
 
 **Note:** Always rebuild Tailwind CSS when adding new utility classes—never edit `css/tailwind.css` directly.
+
+**Formatting:** Run `npx prettier --write .` to format HTML/JS and auto-sort Tailwind classes.

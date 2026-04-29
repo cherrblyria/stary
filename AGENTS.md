@@ -9,7 +9,7 @@ index.html          # Page + settings button
 js/script.js       # Bookmark CRUD, localStorage, settings menu
 css/style.css      # Tailwind source (edit here)
 css/tailwind.css   # Compiled CSS (generated—do not edit)
-bookmarks.json    # (removed) Default bookmarks moved into js/script.js
+bookmarks.json    # (deprecated) Defaults now in js/script.js
 assets/            # background images, favicon
 package.json      # Dev: prettier, @tailwindcss/cli, tailwindcss
 ```
@@ -22,6 +22,8 @@ npx @tailwindcss/cli -i ./css/style.css -o ./css/tailwind.css
 ```
 
 **Rebuild Tailwind after editing `css/style.css` or adding utility classes in HTML.** Never edit `tailwind.css` directly.
+
+**Formatting:** Run `npx prettier --write .` to format HTML/JS and auto-sort Tailwind classes.
 
 ## Data Flow
 
@@ -37,10 +39,14 @@ npx @tailwindcss/cli -i ./css/style.css -o ./css/tailwind.css
 
 Edit mode button uses `w-full px-3 py-2 text-sm` in both states (blue/green) to avoid layout shift.
 
+## Git
+
+Use conventional commits: `feat:`, `fix:`, `refactor:`, `docs:`, `chore:`.
+
 ## Pitfalls
 
 1. Edit `tailwind.css` directly → lost on rebuild
 2. Forget to rebuild Tailwind → styles missing
 3. Button class changes on edit toggle → layout shift
 4. Invalid external bookmarks file → previously could silently fail; defaults are now in-code, see `js/script.js` if you need to change them
-5. Commit without rebuilding → users get unstyled content
+5. Commit without rebuilding → users get unstyled content (run Tailwind CLI before commit)
