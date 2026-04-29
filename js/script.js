@@ -98,7 +98,7 @@ function renderBookmarks() {
     const html = bookmarks
         .map(
             (group, groupIndex) => `
-        <div class="relative group" draggable="true" data-group-index="${groupIndex}" ondragstart="dragStart(event)" ondragover="dragOver(event)" ondrop="drop(event)" ondragleave="dragLeave(event)">
+        <div class="relative group cursor-move" draggable="true" data-group-index="${groupIndex}" ondragstart="dragStart(event)" ondragover="dragOver(event)" ondrop="drop(event)" ondragleave="dragLeave(event)">
         <div class="font-extrabold flex items-center justify-between gap-2">
               <span>${group.category}</span>
               ${editMode ? `<div class="flex gap-2">
@@ -106,13 +106,13 @@ function renderBookmarks() {
                 <button class="text-xs bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600" onclick="deleteCategory(${groupIndex})">Delete</button>
               </div>` : ""}
             </div>
-          <div class="flex flex-col">
+          <div class="flex flex-col p-2" data-group-index="${groupIndex}" ondragover="dragOver(event)" ondrop="drop(event)" ondragleave="dragLeave(event)">
             ${group.links
               .map(
                 (link, linkIndex) => `
-              <div class="flex items-center justify-between gap-2 group/link" draggable="true" data-group-index="${groupIndex}" data-link-index="${linkIndex}" ondragstart="dragStart(event)" ondragover="dragOver(event)" ondrop="drop(event)" ondragleave="dragLeave(event)">
-                <a href="${link.url}" class="hover:underline flex-grow text-left">${link.name}</a>
-                ${editMode ? `<button class="text-xs bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600" onclick="editLink(${groupIndex}, ${linkIndex})">Edit</button><button class="text-xs bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600" onclick="deleteLink(${groupIndex}, ${linkIndex})">Delete</button>` : ""}
+              <div class="flex items-center justify-between gap-2 group/link cursor-move" draggable="true" data-group-index="${groupIndex}" data-link-index="${linkIndex}" ondragstart="dragStart(event)" ondragover="dragOver(event)" ondrop="drop(event)" ondragleave="dragLeave(event)">
+                <a href="${link.url}" class="hover:underline flex-grow text-left pointer-events-none">${link.name}</a>
+                ${editMode ? `<button class="text-xs bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 pointer-events-auto" onclick="event.stopPropagation(); editLink(${groupIndex}, ${linkIndex})">Edit</button><button class="text-xs bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 pointer-events-auto" onclick="event.stopPropagation(); deleteLink(${groupIndex}, ${linkIndex})">Delete</button>` : ""}
               </div>
             `,
               )
@@ -125,28 +125,10 @@ function renderBookmarks() {
         .join("");
 
     if (editMode) {
-    container.innerHTML = `<div class=\"flex gap-4\">${html}<div class=\"flex flex-col items-start\"><button onclick=\"addCategory()\" class=\"w-full px-3 py-2 bg-green-500 text-white rounded hover:bg-green-600 font-semibold text-sm mt-2\">+ Add Category</button></div></div>`;
+    container.innerHTML = `<div class="flex gap-4">${html}<div class="flex flex-col items-start"><button onclick="addCategory()" class="w-full px-3 py-2 bg-green-500 text-white rounded hover:bg-green-600 font-semibold text-sm mt-2">+ Add Category</button></div></div>`;
     } else {
       container.innerHTML = html;
     }
-    
-    // Add drag-over styling
-    const draggables = document.querySelectorAll('[draggable="true"]');
-    draggables.forEach(draggable => {
-        draggable.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            draggable.classList.add('border-2', 'border-dashed', 'border-blue-500');
-        });
-        
-        draggable.addEventListener('dragleave', () => {
-            draggable.classList.remove('border-2', 'border-dashed', 'border-blue-500');
-        });
-        
-        draggable.addEventListener('drop', (e) => {
-            e.preventDefault();
-            draggable.classList.remove('border-2', 'border-dashed', 'border-blue-500');
-        });
-    });
 }
 
 // Toggle edit mode
@@ -263,7 +245,9 @@ function importBookmarks() {
 function resetBookmarks() {
   if (confirm("Reset bookmarks to default? This will clear any local changes.")) {
     localStorage.removeItem("bookmarks");
-    location.reload();
+    bookmarks = JSON.parse(JSON.stringify(defaultBookmarks));
+    saveToLocalStorage();
+    renderBookmarks();
   }
 }
 
@@ -275,29 +259,22 @@ let draggedLinkIndex = null;
 function dragStart(e) {
     if (!editMode) return;
     
-    const target = e.target.closest('[data-group-index]') || 
-                   e.target.closest('[data-link-index]');
-    
+    let target = e.target.closest('[draggable="true"]');
     if (!target) return;
     
     draggedItem = target;
     
-    if (target.hasAttribute('data-group-index')) {
-        draggedGroupIndex = parseInt(target.getAttribute('data-group-index'));
-        draggedLinkIndex = null;
-        e.dataTransfer.effectAllowed = 'move';
-        e.dataTransfer.setData('text/plain', 'group');
-    } else if (target.hasAttribute('data-link-index')) {
+    if (target.hasAttribute('data-link-index')) {
         draggedGroupIndex = parseInt(target.getAttribute('data-group-index'));
         draggedLinkIndex = parseInt(target.getAttribute('data-link-index'));
-        e.dataTransfer.effectAllowed = 'move';
         e.dataTransfer.setData('text/plain', 'link');
+    } else {
+        draggedGroupIndex = parseInt(target.getAttribute('data-group-index'));
+        draggedLinkIndex = null;
+        e.dataTransfer.setData('text/plain', 'group');
     }
     
-    // Add a small delay to allow the browser to render the drag image
-    setTimeout(() => {
-        target.style.opacity = '0.5';
-    }, 0);
+    setTimeout(() => { target.style.opacity = '0.5'; }, 0);
 }
 
 function dragOver(e) {
@@ -305,22 +282,17 @@ function dragOver(e) {
     e.preventDefault();
     e.dataTransfer.dropEffect = 'move';
     
-    const target = e.target.closest('[data-group-index]') || 
-                   e.target.closest('[data-link-index]');
+    const target = e.target.closest('[draggable="true"]') || e.target.closest('[data-group-index]');
+    if (!target || (draggedItem && target === draggedItem)) return;
     
-    if (!target || target === draggedItem) return;
-    
-    // Add visual feedback
-    target.classList.add('border-2', 'border-dashed', 'border-blue-500');
+    target.classList.add(...['border-2', 'border-dashed', 'border-blue-500']);
 }
 
 function dragLeave(e) {
     if (!editMode) return;
-    const target = e.target.closest('[data-group-index]') || 
-                   e.target.closest('[data-link-index]');
-    
+    const target = e.target.closest('[draggable="true"]') || e.target.closest('[data-group-index]');
     if (target) {
-        target.classList.remove('border-2', 'border-dashed', 'border-blue-500');
+        target.classList.remove(...['border-2', 'border-dashed', 'border-blue-500']);
     }
 }
 
@@ -328,67 +300,54 @@ function drop(e) {
     if (!editMode) return;
     e.preventDefault();
     
-    const target = e.target.closest('[data-group-index]') || 
-                   e.target.closest('[data-link-index]');
+    const target = e.target.closest('[draggable="true"]') || e.target.closest('[data-group-index]');
     
-    if (!target || target === draggedItem) {
-        // Remove visual feedback
-        document.querySelectorAll('[data-group-index], [data-link-index]').forEach(el => {
-            el.classList.remove('border-2', 'border-dashed', 'border-blue-500');
-        });
+    if (!target || (draggedItem && target === draggedItem)) {
+        clearDropHighlights();
         return;
     }
     
-    // Remove visual feedback
-    document.querySelectorAll('[data-group-index], [data-link-index]').forEach(el => {
-        el.classList.remove('border-2', 'border-dashed', 'border-blue-500');
-    });
+    clearDropHighlights();
     
-    const targetGroupIndex = target.hasAttribute('data-group-index') ? 
-                             parseInt(target.getAttribute('data-group-index')) : 
-                             parseInt(target.closest('[data-group-index]').getAttribute('data-group-index'));
+    const targetGroupIndex = parseInt(target.getAttribute('data-group-index'));
+    const targetLinkIndex = target.hasAttribute('data-link-index') 
+        ? parseInt(target.getAttribute('data-link-index')) 
+        : null;
     
-    const targetLinkIndex = target.hasAttribute('data-link-index') ? 
-                            parseInt(target.getAttribute('data-link-index')) : 
-                            null;
+    const dragType = e.dataTransfer.getData('text/plain');
     
-    // Handle group reordering
-    if (draggedGroupIndex !== null && draggedLinkIndex === null && e.dataTransfer.getData('text/plain') === 'group') {
-        if (targetGroupIndex !== null) {
-            // Reorder groups
-            const [movedGroup] = bookmarks.splice(draggedGroupIndex, 1);
-            bookmarks.splice(targetGroupIndex, 0, movedGroup);
-            saveToLocalStorage();
-            renderBookmarks();
-        }
-    } 
-    // Handle link reordering within same group
-    else if (draggedGroupIndex !== null && draggedLinkIndex !== null && 
-             targetGroupIndex !== null && targetLinkIndex !== null &&
-             e.dataTransfer.getData('text/plain') === 'link' &&
-             draggedGroupIndex === targetGroupIndex) {
-        // Reorder links within the same group
-        const [movedLink] = bookmarks[draggedGroupIndex].links.splice(draggedLinkIndex, 1);
-        bookmarks[draggedGroupIndex].links.splice(targetLinkIndex, 0, movedLink);
+    // Group reordering
+    if (dragType === 'group' && targetGroupIndex !== draggedGroupIndex) {
+        const [moved] = bookmarks.splice(draggedGroupIndex, 1);
+        bookmarks.splice(targetGroupIndex, 0, moved);
         saveToLocalStorage();
         renderBookmarks();
     }
-    // Handle moving link to different group
-    else if (draggedGroupIndex !== null && draggedLinkIndex !== null && 
-             targetGroupIndex !== null && targetLinkIndex === null &&
-             e.dataTransfer.getData('text/plain') === 'link') {
-        // Move link from one group to another
-        const [movedLink] = bookmarks[draggedGroupIndex].links.splice(draggedLinkIndex, 1);
-        bookmarks[targetGroupIndex].links.push(movedLink);
+    // Link reordering in same group
+    else if (dragType === 'link' && draggedGroupIndex === targetGroupIndex && targetLinkIndex !== null) {
+        const [moved] = bookmarks[draggedGroupIndex].links.splice(draggedLinkIndex, 1);
+        bookmarks[draggedGroupIndex].links.splice(targetLinkIndex, 0, moved);
+        saveToLocalStorage();
+        renderBookmarks();
+    }
+    // Move link to different group (drop on container)
+    else if (dragType === 'link' && targetLinkIndex === null) {
+        const [moved] = bookmarks[draggedGroupIndex].links.splice(draggedLinkIndex, 1);
+        bookmarks[targetGroupIndex].links.push(moved);
         saveToLocalStorage();
         renderBookmarks();
     }
     
-    // Reset dragged item
-    draggedItem.style.opacity = '1';
+    if (draggedItem) draggedItem.style.opacity = '1';
     draggedItem = null;
     draggedGroupIndex = null;
     draggedLinkIndex = null;
+}
+
+function clearDropHighlights() {
+    document.querySelectorAll('[draggable="true"]').forEach(el => {
+        el.classList.remove(...['border-2', 'border-dashed', 'border-blue-500']);
+    });
 }
 
 // Initialize drag and drop events
