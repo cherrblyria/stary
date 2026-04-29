@@ -9,7 +9,7 @@ index.html          # Page + settings button
 js/script.js       # Bookmark CRUD, localStorage, settings menu
 css/style.css      # Tailwind source (edit here)
 css/tailwind.css   # Compiled CSS (generated—do not edit)
-bookmarks.json    # Default bookmarks (fallback)
+bookmarks.json    # (removed) Default bookmarks moved into js/script.js
 assets/            # background images, favicon
 package.json      # Dev: prettier, @tailwindcss/cli, tailwindcss
 ```
@@ -25,7 +25,7 @@ npx @tailwindcss/cli -i ./css/style.css -o ./css/tailwind.css
 
 ## Data Flow
 
-1. **Load:** localStorage → fallback to `bookmarks.json`
+1. **Load:** localStorage → fallback to built-in defaults in `js/script.js`
 2. **Save:** `saveToLocalStorage()` checks `autoSaveEnabled` (silent if disabled)
 3. **Schema:** `[{category, links: [{name, url}, ...]}, ...]`
 
@@ -42,5 +42,5 @@ Edit mode button uses `w-full px-3 py-2 text-sm` in both states (blue/green) to 
 1. Edit `tailwind.css` directly → lost on rebuild
 2. Forget to rebuild Tailwind → styles missing
 3. Button class changes on edit toggle → layout shift
-4. Invalid `bookmarks.json` → silent failure, check console
+4. Invalid external bookmarks file → previously could silently fail; defaults are now in-code, see `js/script.js` if you need to change them
 5. Commit without rebuilding → users get unstyled content

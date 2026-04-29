@@ -21,7 +21,7 @@ A customizable static start page with editable bookmarks. Lightweight, no build 
 ### Customization
 
 #### Bookmarks
-Edit `bookmarks.json` to set default bookmarks, or use the in-app settings menu to manage them directly.
+Defaults are defined in `js/script.js` (variable `defaultBookmarks`). Use the in-app settings menu to manage bookmarks.
 
 #### Appearance
 - **Background Images:** Replace images in `assets/` (square images recommended)

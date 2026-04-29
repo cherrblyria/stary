@@ -2,6 +2,37 @@ let bookmarks = [];
 let editMode = false;
 let autoSaveEnabled = true;
 
+const defaultBookmarks = [
+  {
+    category: "Search",
+    links: [
+      { name: "Google", url: "https://google.com" },
+      { name: "DuckDuckGo", url: "https://duckduckgo.com" }
+    ]
+  },
+  {
+    category: "Development",
+    links: [
+      { name: "GitHub", url: "https://github.com" },
+      { name: "MDN Web Docs", url: "https://developer.mozilla.org" },
+      { name: "Stack Overflow", url: "https://stackoverflow.com" }
+    ]
+  },
+  {
+    category: "Productivity",
+    links: [
+      { name: "Wikipedia", url: "https://wikipedia.org" },
+      { name: "Wolfram Alpha", url: "https://wolframalpha.com" }
+    ]
+  },
+  {
+    category: "Entertainment",
+    links: [
+      { name: "YouTube", url: "https://youtube.com" }
+    ]
+  }
+];
+
 // Toggle settings menu visibility
 function toggleSettingsMenu() {
   const menu = document.getElementById("settings-menu");
@@ -34,17 +65,15 @@ function loadSettings() {
   }
 }
 
-// Load bookmarks from localStorage or fallback to JSON
-async function loadBookmarks() {
+// Load bookmarks from localStorage or fallback to defaults
+function loadBookmarks() {
   try {
     loadSettings();
     const stored = localStorage.getItem("bookmarks");
     if (stored) {
       bookmarks = JSON.parse(stored);
     } else {
-      // Fallback to default bookmarks.json
-      const response = await fetch("./bookmarks.json");
-      bookmarks = await response.json();
+      bookmarks = JSON.parse(JSON.stringify(defaultBookmarks));
       saveToLocalStorage();
     }
     renderBookmarks();
@@ -179,7 +208,7 @@ function exportBookmarks() {
   const url = URL.createObjectURL(dataBlob);
   const link = document.createElement("a");
   link.href = url;
-  link.download = "bookmarks.json";
+  link.download = "stary-bookmarks.json";
   link.click();
   URL.revokeObjectURL(url);
 }
