@@ -1,8 +1,26 @@
-import { state } from './constants.js';
-import { loadBookmarks, exportBookmarks, importBookmarks, resetBookmarks, saveToLocalStorage } from './storage.js';
-import { renderBookmarks } from './render.js';
-import { toggleEditMode, addCategory, renameCategory, deleteCategory, addLink, editLink, deleteLink } from './crud.js';
-import { dragStart, dragOver, dragLeave, drop } from './drag.js';
+import { state } from "./constants.js";
+import {
+  loadBookmarks,
+  exportBookmarks,
+  importBookmarks,
+  resetBookmarks,
+  saveToLocalStorage,
+  editImage,
+  exportImages,
+  importImages,
+  resetImages,
+} from "./storage.js";
+import { renderBookmarks } from "./render.js";
+import {
+  toggleEditMode,
+  addCategory,
+  renameCategory,
+  deleteCategory,
+  addLink,
+  editLink,
+  deleteLink,
+} from "./crud.js";
+import { dragStart, dragOver, dragLeave, drop } from "./drag.js";
 
 export function toggleSettingsMenu() {
   const menu = document.getElementById("settings-menu");
@@ -11,7 +29,10 @@ export function toggleSettingsMenu() {
 
 export function toggleAutoSave() {
   state.autoSaveEnabled = document.getElementById("auto-save-toggle").checked;
-  localStorage.setItem("autoSaveEnabled", JSON.stringify(state.autoSaveEnabled));
+  localStorage.setItem(
+    "autoSaveEnabled",
+    JSON.stringify(state.autoSaveEnabled),
+  );
 }
 
 window.toggleSettingsMenu = toggleSettingsMenu;
@@ -30,6 +51,10 @@ window.dragStart = dragStart;
 window.dragOver = dragOver;
 window.dragLeave = dragLeave;
 window.drop = drop;
+window.editImage = editImage;
+window.exportImages = exportImages;
+window.importImages = importImages;
+window.resetImages = resetImages;
 
 document.addEventListener("click", (e) => {
   const menu = document.getElementById("settings-menu");
@@ -39,6 +64,6 @@ document.addEventListener("click", (e) => {
   }
 });
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
   loadBookmarks();
 });
